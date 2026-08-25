@@ -1,0 +1,6 @@
+.venv/
+__pycache__/
+*.pyc
+*.pem
+rehber_state.json
+.technocore/
