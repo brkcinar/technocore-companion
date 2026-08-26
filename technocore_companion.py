@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Technocore Rehber - Teknik bilgisi olmayan kullanicilar icin adim adim
+Technocore Companion - Teknik bilgisi olmayan kullanicilar icin adim adim
 Technocore did:key sihirbazi.
 
 Bu arac, teknocore-did-starter (Python/CLI) ve technocore-did-tool (Node/Web)
@@ -34,7 +34,7 @@ from urllib.request import Request, urlopen
 from cryptography.hazmat.primitives import serialization
 from cryptography.hazmat.primitives.asymmetric.ed25519 import Ed25519PrivateKey
 
-APP_NAME = "technocore-rehber"
+APP_NAME = "technocore-companion"
 APP_VERSION = "0.1.0"
 DEFAULT_BASE_URL = "https://technocore.chat"
 DEFAULT_KEY_PATH = Path.home() / ".technocore" / "identity.pem"
@@ -44,7 +44,7 @@ BASE58BTC_ALPHABET = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz
 
 TEXT = {
     "tr": {
-        "welcome": "== Technocore Rehber ==\nBu sihirbaz size Technocore icin bir dijital kimlik (DID) olusturmanizda ve isterseniz bunu ilan etmenizde adim adim yardimci olur.\nHer adimda ne yaptigimizi acikliyorum; internete bir sey gondermeden once HER ZAMAN sizden onay alacagim.\n",
+        "welcome": "== Technocore Companion ==\nBu sihirbaz size Technocore icin bir dijital kimlik (DID) olusturmanizda ve isterseniz bunu ilan etmenizde adim adim yardimci olur.\nHer adimda ne yaptigimizi acikliyorum; internete bir sey gondermeden once HER ZAMAN sizden onay alacagim.\n",
         "menu": "\nNe yapmak istersiniz?\n 1) Yeni kimlik olustur (ilk kez)\n 2) Kimligimi goster\n 3) Katkimi kaydet + paylasim metni olustur (offline, hicbir sey gonderilmez)\n 4) Kaydedilen katkiyi Technocore'a gonder (AGA VERI GONDERIR - onay ister)\n 5) Cikis\n> ",
         "no_identity": "Henuz bir kimlik olusturulmamis. Once 1'i secin.",
         "identity_exists": "Zaten bir kimlik var: {path}\nUzerine yazmiyorum; farkli bir kimlik istiyorsaniz once o dosyayi elle silmelisiniz.",
@@ -56,7 +56,7 @@ TEXT = {
         "your_did": "DID'iniz: {did}",
         "enter_passphrase": "Kimliginizin parolasini girin: ",
         "wrong_passphrase": "Parola yanlis ya da dosya bozuk.",
-        "contribution_prompt": "Kaydetmek istediginiz katkiyi kisaca anlatin (ornek: 'technocore-rehber adli acik kaynak bir CLI araci yazdim'): ",
+        "contribution_prompt": "Kaydetmek istediginiz katkiyi kisaca anlatin (ornek: 'technocore-companion adli acik kaynak bir CLI araci yazdim'): ",
         "contribution_url_prompt": "Bu katkiya ait bir link var mi (GitHub reposu, video, makale)? Yoksa bos birakin: ",
         "share_generated": "Paylasim metni ve kanit dosyasi hazirlandi (henuz hicbir yere GONDERILMEDI):\n  {export_path}\n\nAsagidaki metni isterseniz kendi X (Twitter) hesabinizdan paylasabilirsiniz:\n---\n{share}\n---",
         "no_pending": "Once 3 numarali secenekle offline bir katki kaydi hazirlamalisiniz.",
@@ -69,7 +69,7 @@ TEXT = {
         "invalid_choice": "Gecersiz secim.",
     },
     "en": {
-        "welcome": "== Technocore Rehber (Guide) ==\nThis wizard helps you create a Technocore digital identity (DID) and, if you choose, announce it - step by step.\nI explain every step, and ALWAYS ask before sending anything to the network.\n",
+        "welcome": "== Technocore Companion (Guide) ==\nThis wizard helps you create a Technocore digital identity (DID) and, if you choose, announce it - step by step.\nI explain every step, and ALWAYS ask before sending anything to the network.\n",
         "menu": "\nWhat would you like to do?\n 1) Create a new identity (first time)\n 2) Show my identity\n 3) Prepare a contribution + share text (offline, nothing is sent)\n 4) Send the saved contribution to Technocore (SENDS DATA - asks for confirmation)\n 5) Exit\n> ",
         "no_identity": "No identity created yet. Choose 1 first.",
         "identity_exists": "An identity already exists: {path}\nNot overwriting it; delete that file yourself first if you want a new one.",
@@ -81,7 +81,7 @@ TEXT = {
         "your_did": "Your DID: {did}",
         "enter_passphrase": "Enter your identity passphrase: ",
         "wrong_passphrase": "Wrong passphrase or corrupted file.",
-        "contribution_prompt": "Briefly describe the contribution you want to register (e.g. 'I wrote an open-source CLI called technocore-rehber'): ",
+        "contribution_prompt": "Briefly describe the contribution you want to register (e.g. 'I wrote an open-source CLI called technocore-companion'): ",
         "contribution_url_prompt": "A link for this contribution (GitHub repo, video, article)? Leave empty to skip: ",
         "share_generated": "Share text and proof file are ready (NOTHING has been sent anywhere yet):\n  {export_path}\n\nYou can post this from your own X (Twitter) account if you want:\n---\n{share}\n---",
         "no_pending": "Prepare an offline contribution first with option 3.",
@@ -190,7 +190,7 @@ class Wizard:
         url = normalize_text(input(self.t("contribution_url_prompt")))
         nonce = str(time.time_ns())
         room = "lobby"
-        pieces = [f"technocore-rehber-contribution-v1", f"did:{did}", f"summary:{summary}"]
+        pieces = [f"technocore-companion-contribution-v1", f"did:{did}", f"summary:{summary}"]
         if url:
             pieces.append(f"url:{url}")
         text = normalize_text(" ".join(pieces))[:4096]

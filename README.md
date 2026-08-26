@@ -1,4 +1,4 @@
-# technocore-rehber
+# technocore-companion
 
 🇹🇷 Türkçe | [🇬🇧 English](README.en.md)
 
@@ -8,11 +8,13 @@ sihirbazı**. Terminalde çalışır, hiçbir tarayıcı ya da yerel web sunucus
 açmaz; kimliğinizin özel anahtarı (private key) her zaman şifreli olarak
 diskte tutulur ve hiçbir zaman ekrana ya da ağa çıplak biçimde yazılmaz.
 
-> ⚠️ **Önemli:** `technocore.chat` sunucusunun flop.finance ile resmi bir
-> bağlantısı olduğu **doğrulanmamıştır**. Bu araç size sadece protokole
-> güvenli ve bilinçli şekilde katılma imkânı verir; hiçbir ödül ya da
-> airdrop uygunluğu garanti etmez. Ağa bir şey göndermeden önce araç size
-> her seferinde tam olarak ne gönderileceğini gösterir ve onayınızı ister.
+> ⚠️ **Önemli:** `technocore.chat`, Flop Labs'ın resmi GitHub
+> organizasyonunda (`github.com/flop-labs/technocore-chat`) yayınladığı,
+> çekirdek protokolün parçası olmayan ("satellite service") ama resmen
+> kendi işlettiği bir yardımcı servistir. Buna rağmen bu araç size hiçbir
+> ödül ya da airdrop uygunluğu **garanti etmez** — bunlar Flop Labs'ın
+> kendi takdirinde. Ağa bir şey göndermeden önce araç size her seferinde
+> tam olarak ne gönderileceğini gösterir ve onayınızı ister.
 
 ---
 
@@ -74,8 +76,8 @@ sudo apt upgrade -y
 sudo apt install -y python3 python3-venv python3-pip git
 
 # Bu repoyu bilgisayarınıza indirin (klonlayın)
-git clone https://github.com/<kullanici-adiniz>/technocore-rehber.git
-cd technocore-rehber
+git clone https://github.com/<kullanici-adiniz>/technocore-companion.git
+cd technocore-companion
 
 # Python için izole bir çalışma ortamı (venv) oluşturun ve aktive edin
 python3 -m venv .venv
@@ -94,13 +96,13 @@ pip install -r requirements.txt
 Aracı Türkçe menüyle başlatmak için:
 
 ```bash
-python3 technocore_rehber.py tr
+python3 technocore_companion.py tr
 ```
 
 İngilizce menü için:
 
 ```bash
-python3 technocore_rehber.py en
+python3 technocore_companion.py en
 ```
 
 Karşınıza şöyle bir menü çıkacak:
@@ -134,9 +136,9 @@ Ne yapmak istersiniz?
 ## 5) Örnek çalıştırma
 
 ```
-$ python3 technocore_rehber.py tr
+$ python3 technocore_companion.py tr
 
-== Technocore Rehber ==
+== Technocore Companion ==
 Bu sihirbaz size Technocore icin bir dijital kimlik (DID) olusturmanizda...
 
 Ne yapmak istersiniz?
@@ -157,7 +159,7 @@ DID'iniz: did:key:z6MkvxJLotfEqBPjCnsinArfX1vEmRPKvwnPgGcKReYySaog
   şifresiz bir dosya olarak indirtir — bu araç bunu yapmaz.
 - **Ağa veri gönderen tek adım (`4`) her zaman açık onay ister** ve
   göndermeden önce tam içeriği gösterir.
-- Kod tek bir Python dosyası (`technocore_rehber.py`) — kısa, okunabilir,
+- Kod tek bir Python dosyası (`technocore_companion.py`) — kısa, okunabilir,
   gizli bir davranışı yok; isterseniz kurulum yapmadan önce dosyayı açıp
   okuyabilirsiniz.
 

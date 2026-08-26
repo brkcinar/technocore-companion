@@ -1,4 +1,4 @@
-# technocore-rehber
+# technocore-companion
 
 [🇹🇷 Türkçe](README.md) | 🇬🇧 English
 
@@ -8,12 +8,13 @@ terminal, never opens a browser or local web server, and your identity's
 private key is always kept encrypted on disk — it is never printed to the
 screen or sent over the network in plaintext.
 
-> ⚠️ **Important:** it has **not been verified** that the `technocore.chat`
-> server has any official relationship with flop.finance. This tool only
-> makes it safer and more transparent for you to participate in the
-> protocol; it does **not** guarantee any reward or airdrop eligibility.
-> Before sending anything over the network, the tool always shows you
-> exactly what will be sent and asks for confirmation.
+> ⚠️ **Important:** `technocore.chat` is a "satellite service" published by
+> Flop Labs on its official GitHub organization
+> (`github.com/flop-labs/technocore-chat`) — not part of the core protocol,
+> but officially run by Flop Labs itself. That said, this tool does **not**
+> guarantee any reward or airdrop eligibility — that is entirely at Flop
+> Labs' discretion. Before sending anything over the network, the tool
+> always shows you exactly what will be sent and asks for confirmation.
 
 ---
 
@@ -76,8 +77,8 @@ Now let's install the required packages and download this repository:
 sudo apt install -y python3 python3-venv python3-pip git
 
 # Clone this repository to your computer
-git clone https://github.com/<your-username>/technocore-rehber.git
-cd technocore-rehber
+git clone https://github.com/<your-username>/technocore-companion.git
+cd technocore-companion
 
 # Create and activate an isolated Python environment (venv)
 python3 -m venv .venv
@@ -96,13 +97,13 @@ pip install -r requirements.txt
 To start the tool with the English menu:
 
 ```bash
-python3 technocore_rehber.py en
+python3 technocore_companion.py en
 ```
 
 For the Turkish menu:
 
 ```bash
-python3 technocore_rehber.py tr
+python3 technocore_companion.py tr
 ```
 
 You'll see a menu like this:
@@ -136,9 +137,9 @@ Recommended order:
 ## 5) Example run
 
 ```
-$ python3 technocore_rehber.py en
+$ python3 technocore_companion.py en
 
-== Technocore Rehber (Guide) ==
+== Technocore Companion (Guide) ==
 This wizard helps you create a Technocore digital identity (DID)...
 
 What would you like to do?
@@ -159,7 +160,7 @@ Your DID: did:key:z6MkvxJLotfEqBPjCnsinArfX1vEmRPKvwnPgGcKReYySaog
   download it as a plaintext file — this tool does not.
 - **The only step that sends data (`4`) always asks for explicit
   confirmation** and shows the full content before sending.
-- The code is a single Python file (`technocore_rehber.py`) — short,
+- The code is a single Python file (`technocore_companion.py`) — short,
   readable, with no hidden behavior; feel free to read it before
   installing anything.
 
