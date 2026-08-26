@@ -25,10 +25,11 @@ screen or sent over the network in plaintext.
 3. [Installation](#3-installation)
 4. [Usage](#4-usage)
 5. [Example run](#5-example-run)
-6. [Why this tool is safe](#6-why-this-tool-is-safe)
-7. [FAQ](#7-faq)
-8. [Contributing](#8-contributing)
-9. [License](#9-license)
+6. [Inbox and limited auto-reply](#6-inbox-and-limited-auto-reply)
+7. [Why this tool is safe](#7-why-this-tool-is-safe)
+8. [FAQ](#8-faq)
+9. [Contributing](#9-contributing)
+10. [License](#10-license)
 
 ---
 
@@ -112,9 +113,12 @@ You'll see a menu like this:
 What would you like to do?
  1) Create a new identity (first time)
  2) Show my identity
- 3) Prepare a contribution + share text (offline, nothing is sent)
- 4) Send the saved contribution to Technocore (SENDS DATA - asks for confirmation)
- 5) Exit
+ 3) Announce my identity (publish my mailbox address - SENDS DATA)
+ 4) Prepare a contribution + share text (offline, nothing is sent)
+ 5) Send the saved contribution (SENDS DATA - asks for confirmation)
+ 6) Check my inbox
+ 7) Wait for a new message (live - Ctrl+C to stop)
+ 8) Exit
 ```
 
 Recommended order:
@@ -122,17 +126,23 @@ Recommended order:
 1. **`1` — Create a new identity:** You'll be asked for a passphrase
    (12+ characters). **Don't forget it and never share it** — it
    encrypts your identity and stores it at `~/.technocore/identity.pem`.
-2. **`2` — Show my identity:** Prints the DID (digital identifier) you
-   just created, e.g. `did:key:z6Mk...`
-3. **`3` — Prepare a contribution:** Asks what you want to register as
+   It also generates a random, unguessable **mailbox address**
+   (`mb-p-...`) for you at the same time — but does not tell anyone
+   about it yet.
+2. **`2` — Show my identity:** Prints your DID and your mailbox address.
+3. **`3` — Announce my identity:** Publishes your mailbox address
+   somewhere anyone can read, so others can reach you. **Only the
+   address is published**, never what's inside the mailbox.
+4. **`4` — Prepare a contribution:** Asks what you want to register as
    your contribution (for example, this repository if you wrote it),
    an optional link, then prepares a signed message and ready-to-post
    share text **entirely offline**. **Nothing is sent anywhere** at
    this step.
-4. **`4` — Send to Technocore:** This step actually sends data over the
+5. **`5` — Send:** This step actually sends data over the
    network. Before sending, it shows you *exactly* what will be sent
    and to which address, and explicitly asks `yes`/`no`. Type `no` to
    cancel if you don't want to proceed.
+6. **`6` / `7` — Inbox:** see the section below.
 
 ## 5) Example run
 
@@ -150,7 +160,46 @@ Identity created and stored encrypted: /home/user/.technocore/identity.pem
 Your DID: did:key:z6MkvxJLotfEqBPjCnsinArfX1vEmRPKvwnPgGcKReYySaog
 ```
 
-## 6) Why this tool is safe
+## 6) Inbox and limited auto-reply
+
+This is what sets `technocore-companion` apart from every other
+Technocore tool we know of: they are all **one-way** ("create identity,
+post a message, done"). This tool can be **two-way** — you can find out
+when someone writes back to you.
+
+It uses Technocore's own "mailbox" (`mb-`) mechanism: it only accepts
+**signed** messages (from a provable identity), and its name is
+unguessable (`mb-p-<random>`), so it cannot be flooded with spam. Only
+people you've told (via step `3`) can find the address.
+
+- **`6` — Check my inbox:** reads your mailbox once, shows new messages.
+- **`7` — Wait for a new message:** stays open and prints a message
+  **the instant** someone sends one. `Ctrl+C` to stop.
+
+### Autonomy is LIMITED, on purpose
+
+The tool can react to an incoming message in exactly three ways:
+
+1. **Auto-reply** — ONLY when the message is an exact match for one of a
+   short, fixed, harmless list of triggers (like `ping` or `status`), it
+   sends back a canned "I'm here" reply. This is also capped, both
+   **per day** and **per sender**.
+2. **⚠️ Flagged as suspicious** — if the message looks like it's asking
+   you to *do* something ("send", "sign", "run", "click", "wallet",
+   "private key"...), the tool does **nothing automatically** and warns
+   you loudly instead. **Do not blindly follow such messages** — this
+   could be an attempt to trick you into an action (see the security
+   note below).
+3. **Left to you** — anything else is simply shown to you, with an
+   optional prompt to write a reply by hand; **nothing is sent** unless
+   you type it and confirm.
+
+In other words, the tool never follows a "send/sign/download this"
+instruction on its own, and never performs a complex action on your
+behalf — the most it ever does automatically is say "I'm here." Everything
+else stays your call.
+
+## 7) Why this tool is safe
 
 - **The private key is never written to disk in plaintext.** It's
   stored as a passphrase-encrypted PEM file (with `0600` permissions,
@@ -158,13 +207,16 @@ Your DID: did:key:z6MkvxJLotfEqBPjCnsinArfX1vEmRPKvwnPgGcKReYySaog
 - **No browser or local web server is opened.** Some similar tools pass
   the private key through a local API to the browser and let you
   download it as a plaintext file — this tool does not.
-- **The only step that sends data (`4`) always asks for explicit
-  confirmation** and shows the full content before sending.
+- **The steps that send data (`3`, `5`) always ask for explicit
+  confirmation** and show the full content before sending.
+- **Auto-reply is deliberately narrow** — see section 6 above. If a
+  message asks the tool to send/sign/run something, it never complies
+  on its own; it only warns you.
 - The code is a single Python file (`technocore_companion.py`) — short,
   readable, with no hidden behavior; feel free to read it before
   installing anything.
 
-## 7) FAQ
+## 8) FAQ
 
 **I forgot my passphrase, what do I do?**
 Unfortunately there's no way to open an encrypted identity file without
@@ -182,11 +234,16 @@ Run `sudo apt install -y python3` and try again.
 **My terminal doesn't show `(.venv)`, what now?**
 Run `source .venv/bin/activate` again while inside the repo folder.
 
-## 8) Contributing
+**My inbox refused to auto-reply, why?**
+Either your daily auto-reply budget is used up, or that sender already
+got an auto-reply too recently (a deliberate limit against spam/abuse).
+You can still reply by hand.
+
+## 9) Contributing
 
 Found a bug or have an improvement idea? Open an Issue on GitHub, or
 send a Pull Request directly.
 
-## 9) License
+## 10) License
 
 [MIT](LICENSE) — free to use, modify, and distribute.
