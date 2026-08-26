@@ -120,6 +120,7 @@ TEXT = {
         "passphrase_mismatch": "Parolalar eslesmedi, tekrar deneyin.",
         "passphrase_short": "Parola en az 12 karakter olmali.",
         "identity_created": "Kimlik olusturuldu ve sifreli olarak kaydedildi: {path}\nDID'iniz: {did}\nPosta kutunuz (henuz kimseye ilan edilmedi): {mailbox}\n(Bu dosyayi ve parolanizi kimseyle paylasmayin.)",
+        "mailbox_migrated": "(Not: mevcut kimliginiz icin yeni bir posta kutusu adresi olusturuldu: {mailbox} - henuz kimseye ilan edilmedi.)",
         "your_did": "DID'iniz: {did}\nPosta kutunuz: {mailbox} (ilan edildi: {published})",
         "enter_passphrase": "Kimliginizin parolasini girin: ",
         "wrong_passphrase": "Parola yanlis ya da dosya bozuk.",
@@ -158,6 +159,7 @@ TEXT = {
         "passphrase_mismatch": "Passphrases did not match, try again.",
         "passphrase_short": "Passphrase must be at least 12 characters.",
         "identity_created": "Identity created and stored encrypted: {path}\nYour DID: {did}\nYour mailbox (not announced to anyone yet): {mailbox}\n(Never share this file or your passphrase.)",
+        "mailbox_migrated": "(Note: a new mailbox address was created for your existing identity: {mailbox} - not announced to anyone yet.)",
         "your_did": "Your DID: {did}\nYour mailbox: {mailbox} (announced: {published})",
         "enter_passphrase": "Enter your identity passphrase: ",
         "wrong_passphrase": "Wrong passphrase or corrupted file.",
@@ -274,12 +276,35 @@ class Wizard:
     # ------------------------------------------------------------ state
 
     def load_state(self) -> dict:
+        """Read the state file, migrating it in place if it predates 0.2.0.
+
+        An identity created before this version has no `mailbox` - self-heal rather than
+        telling the user to create a new identity (their key and DID are still fine, only
+        the state file is missing fields). Likewise fold the old flat
+        did/room/nonce/text/signature shape into `pending`, so an already-prepared,
+        already-signed contribution is not silently forgotten.
+        """
         if not DEFAULT_STATE_PATH.exists():
-            return {}
-        try:
-            return json.loads(DEFAULT_STATE_PATH.read_text(encoding="utf-8"))
-        except (json.JSONDecodeError, OSError):
-            return {}
+            state = {}
+        else:
+            try:
+                state = json.loads(DEFAULT_STATE_PATH.read_text(encoding="utf-8"))
+            except (json.JSONDecodeError, OSError):
+                state = {}
+        changed = False
+        if DEFAULT_KEY_PATH.exists() and "mailbox" not in state:
+            state["mailbox"] = new_mailbox_name()
+            state.setdefault("published", False)
+            state.setdefault("last_seq", 0)
+            state.setdefault("auto_reply_log", [])
+            changed = True
+            print(self.t("mailbox_migrated", mailbox=state["mailbox"]))
+        if "pending" not in state and {"room", "nonce", "text"} <= state.keys():
+            state["pending"] = {"room": state["room"], "nonce": state["nonce"], "text": state["text"]}
+            changed = True
+        if changed:
+            self.save_state(state)
+        return state
 
     def save_state(self, state: dict) -> None:
         DEFAULT_STATE_PATH.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
